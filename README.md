@@ -21,7 +21,7 @@ from sklearn import svm
 ```
 
 The data we would be using here is HR obtained from Kaggle and is available in this repository inside the "Datasets" folder.
-Using this data I would attempt to answer the following questions: 
+Using this data I would attempt to answer the following questions:
     1. "What are the primary reasons that motivate people to leave this company"
     2. "Who among all of the current employees that are likely to leave this company"
 Answering those two questions will prove to be beneficial for the HR department's attempt to formulate a strategy to prevent
@@ -39,19 +39,6 @@ df.describe()
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -172,19 +159,6 @@ df.head()
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -285,19 +259,6 @@ df.head()
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -417,7 +378,7 @@ print('Percentage of people who had left :', format(int(df[df['left']==1].size/d
     Number of individuals who had left :  35710
     Number of individuals who stayed :  114280
     Percentage of people who had left : 23 %
-    
+
 
 A major factor in the employee's decision to leave their current job is the amount of work they do everyday, so in the code below I shall take a look at the average amount of time all the employees of this company spend working each day.
 
@@ -433,7 +394,7 @@ df.mean()['average_montly_hours']/30
 
 
 
-It appears that the employees on average spend 6.7 hours per day working, we should compare the amount of time all the employees that has already left the company spend each day with the average to see whether this is a contributing factor in their decision to leave. 
+It appears that the employees on average spend 6.7 hours per day working, we should compare the amount of time all the employees that has already left the company spend each day with the average to see whether this is a contributing factor in their decision to leave.
 
 
 ```python
@@ -462,19 +423,6 @@ correlation_matrix
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -600,8 +548,8 @@ From the above heatmap we can understand a lot about how one feature of the data
     1. The number of project an employee has done correlates negatively with the satisfaction level
     2. The time spent at the company correlates negatively with the satisfaction level
     3. The last evaluation of an employee correlates positively with the number of project an employee has done
-    
-Next, I will divide the employee based on their salary level(high, medium, low) 
+
+Next, I will divide the employee based on their salary level(high, medium, low)
 
 
 ```python
@@ -617,7 +565,7 @@ print('High salary employees : ', len(sal_h))
     Low salary employees total :  7316
     Medium salary employees total :  6446
     High salary employees :  1237
-    
+
 
 I will analyze further the employees belonging to each salary level
 
@@ -629,25 +577,12 @@ desc_l.iloc[1:2, :]
 ```
 
     Low Salary Employee :
-    
+
 
 
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -688,25 +623,12 @@ desc_m.iloc[1:2, :]
 ```
 
     Medium Salary Employee :
-    
+
 
 
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -747,25 +669,12 @@ desc_h.iloc[1:2, :]
 ```
 
     High Salary Employee :
-    
+
 
 
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -838,19 +747,6 @@ df_copy.head()
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1016,7 +912,7 @@ df1 = df1.drop(['left'],axis=1)
 X = df1.values
 ```
 
-I will now split both the dataset and the target variable into 2 subsets of training data and test data, this is done to allow us to cross-validate the machine learning model and prevent underfitting or overfitting 
+I will now split both the dataset and the target variable into 2 subsets of training data and test data, this is done to allow us to cross-validate the machine learning model and prevent underfitting or overfitting
 
 
 ```python
@@ -1033,7 +929,7 @@ print("Accuracy score : ", reg.score(X_test, y_test))
 ```
 
     Accuracy score :  0.788952380952
-    
+
 
 
 ```python
@@ -1043,11 +939,11 @@ print("Accuracy score : ", sgd.score(X_test, y_test))
 ```
 
     Accuracy score :  0.713428571429
-    
+
 
     C:\Users\ROG550J\Miniconda3\lib\site-packages\sklearn\linear_model\stochastic_gradient.py:84: FutureWarning: max_iter and tol parameters have been added in <class 'sklearn.linear_model.stochastic_gradient.SGDClassifier'> in 0.19. If both are left unset, they default to max_iter=5 and tol=None. If tol is not None, max_iter defaults to max_iter=1000. From 0.21, default max_iter will be 1000, and default tol will be 1e-3.
       "and default tol will be 1e-3." % type(self), FutureWarning)
-    
+
 
 
 ```python
@@ -1057,7 +953,7 @@ print("Accuracy score : ", rfc.score(X_test, y_test))
 ```
 
     Accuracy score :  0.978666666667
-    
+
 
 Looking at each of the machine learning model accuracy scores, it is obvious that the random forest classifier is the best. I am very pleased to find this, as using random forest classifier allows us to rank the feature of our dataset according to their importance, which I will do below
 
@@ -1089,7 +985,7 @@ for f in range(df1.shape[1]):
     department_product_mng (0.002004)
     department_IT (0.001789)
     department_marketing (0.000782)
-    
+
 
 Above we can see the list of features ranked based on their importance to the employee's decision to leave the company. The top 5 reasons are: satisfaction level, number of projects, average monthly working hours, time spent at the company, and last evaluation. This should sufficiently answer our first question.
 
@@ -1120,31 +1016,18 @@ stay['leave_prob'] = pred
 stay.head()
 ```
 
-    C:\Users\ROG550J\Miniconda3\lib\site-packages\ipykernel_launcher.py:1: SettingWithCopyWarning: 
+    C:\Users\ROG550J\Miniconda3\lib\site-packages\ipykernel_launcher.py:1: SettingWithCopyWarning:
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
-    
+
     See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
       """Entry point for launching an IPython kernel.
-    
+
 
 
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1251,19 +1134,6 @@ leaving_ind
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
