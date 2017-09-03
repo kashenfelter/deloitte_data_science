@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import warnings
+warnings.filterwarnings("ignore")
 
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import LabelEncoder
@@ -18,6 +20,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LogisticRegression
 from sklearn import svm
+from matplotlib.pyplot import pie, axis, show
 ```
 
 The data we would be using here is HR obtained from Kaggle and is available in this repository inside the "Datasets" folder.
@@ -709,28 +712,16 @@ desc_h.iloc[1:2, :]
 
 Looking at the three tables above, we can see that as the salary level increases, the number of ex-employee decreases. This is rather obvious seeing that employees would normaly stay in a company that pays them highly. We can also see from the tables that the satisfaction level seems to increase slightly as the salary level increases.
 
-I am curious to see the distribution of department within each salary level, so below I have made plotted the number of employee on each department separated according to their salary level.
+In the chart above we can see the distribution of employees in different departments according their salary level, and below I will chart the average satisfaction level of each department employees
 
 
 ```python
-sns.factorplot("department", col="salary", col_wrap=4, data=df, kind="count", size=10, aspect=.8)
+df.groupby('department').mean()['satisfaction_level'].plot(kind='bar',color='purple')
 plt.show()
 ```
 
 
 ![png](output_27_0.png)
-
-
-In the chart above we can see the distribution of employees in different departments according their salary level, and below I will chart the average satisfaction level of each department employees
-
-
-```python
-df.groupby('department').mean()['satisfaction_level'].plot(kind='bar',color='r')
-plt.show()
-```
-
-
-![png](output_29_0.png)
 
 
 Apparently the employees in the accounting department has the least average satisfaction level, although I'm sure this won't be the case at Deloitte's ;)
@@ -902,7 +893,7 @@ df_copy.head()
 
 
 
-Now we will separate the 'left' and make it into a target variable
+Now we will separate the ex-employees and make it into a target variable
 
 
 ```python
@@ -928,7 +919,7 @@ reg.fit(X_train, y_train)
 print("Accuracy score : ", reg.score(X_test, y_test))
 ```
 
-    Accuracy score :  0.788952380952
+    Accuracy score :  0.78580952381
 
 
 
@@ -938,11 +929,7 @@ sgd.fit(X_train, y_train)
 print("Accuracy score : ", sgd.score(X_test, y_test))
 ```
 
-    Accuracy score :  0.713428571429
-
-
-    C:\Users\ROG550J\Miniconda3\lib\site-packages\sklearn\linear_model\stochastic_gradient.py:84: FutureWarning: max_iter and tol parameters have been added in <class 'sklearn.linear_model.stochastic_gradient.SGDClassifier'> in 0.19. If both are left unset, they default to max_iter=5 and tol=None. If tol is not None, max_iter defaults to max_iter=1000. From 0.21, default max_iter will be 1000, and default tol will be 1e-3.
-      "and default tol will be 1e-3." % type(self), FutureWarning)
+    Accuracy score :  0.759619047619
 
 
 
@@ -952,7 +939,7 @@ rfc.fit(X_train, y_train)
 print("Accuracy score : ", rfc.score(X_test, y_test))
 ```
 
-    Accuracy score :  0.978666666667
+    Accuracy score :  0.979142857143
 
 
 Looking at each of the machine learning model accuracy scores, it is obvious that the random forest classifier is the best. I am very pleased to find this, as using random forest classifier allows us to rank the feature of our dataset according to their importance, which I will do below
@@ -965,26 +952,26 @@ for f in range(df1.shape[1]):
     print('%s (%f)' % (df1.columns[indices[f]], rfc.feature_importances_[indices[f]]))
 ```
 
-    satisfaction_level (0.278565)
-    number_project (0.220940)
-    average_montly_hours (0.177149)
-    time_spend_company (0.147985)
-    last_evaluation (0.117805)
-    salary_low (0.008216)
-    Work_accident (0.007264)
-    salary_high (0.007049)
-    salary_medium (0.006089)
-    department_support (0.004048)
-    department_sales (0.003881)
-    department_technical (0.003412)
-    department_hr (0.003367)
-    department_management (0.003225)
-    department_RandD (0.002214)
-    department_accounting (0.002150)
-    promotion_last_5years (0.002066)
-    department_product_mng (0.002004)
-    department_IT (0.001789)
-    department_marketing (0.000782)
+    satisfaction_level (0.273716)
+    number_project (0.219028)
+    average_montly_hours (0.184047)
+    time_spend_company (0.170171)
+    last_evaluation (0.099152)
+    Work_accident (0.010931)
+    salary_low (0.006543)
+    department_technical (0.004948)
+    salary_medium (0.004852)
+    department_sales (0.003809)
+    salary_high (0.003633)
+    department_hr (0.002954)
+    department_IT (0.002733)
+    department_support (0.002559)
+    department_accounting (0.002268)
+    department_RandD (0.002193)
+    department_marketing (0.002083)
+    promotion_last_5years (0.001829)
+    department_product_mng (0.001305)
+    department_management (0.001246)
 
 
 Above we can see the list of features ranked based on their importance to the employee's decision to leave the company. The top 5 reasons are: satisfaction level, number of projects, average monthly working hours, time spent at the company, and last evaluation. This should sufficiently answer our first question.
@@ -1012,17 +999,9 @@ pred = rfc.predict(X)
 
 
 ```python
-stay['leave_prob'] = pred
+stay['may_leave'] = pred
 stay.head()
 ```
-
-    C:\Users\ROG550J\Miniconda3\lib\site-packages\ipykernel_launcher.py:1: SettingWithCopyWarning:
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-
-    See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
-      """Entry point for launching an IPython kernel.
-
 
 
 
@@ -1042,7 +1021,7 @@ stay.head()
       <th>promotion_last_5years</th>
       <th>department</th>
       <th>salary</th>
-      <th>leave_prob</th>
+      <th>may_leave</th>
     </tr>
   </thead>
   <tbody>
@@ -1122,11 +1101,11 @@ stay.head()
 
 
 
-After using the random forest classifier to calculate the probability of leaving for each employee, I will filter out those who have more than 50% probabilty of leaving
+After using the random forest classifier to calculate the probability of leaving for each employee, I will filter out those who are predicted to leave the company
 
 
 ```python
-leaving_ind = stay[stay['leave_prob'] > 0.5]
+leaving_ind = stay[stay['may_leave'] == 1]
 leaving_ind
 ```
 
@@ -1146,12 +1125,40 @@ leaving_ind
       <th>Work_accident</th>
       <th>left</th>
       <th>promotion_last_5years</th>
-      <th>sales</th>
+      <th>department</th>
       <th>salary</th>
-      <th>leave_prob</th>
+      <th>may_leave</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>2703</th>
+      <td>0.76</td>
+      <td>0.93</td>
+      <td>3</td>
+      <td>271</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>hr</td>
+      <td>low</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3079</th>
+      <td>0.82</td>
+      <td>0.97</td>
+      <td>3</td>
+      <td>244</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>medium</td>
+      <td>1</td>
+    </tr>
     <tr>
       <th>3780</th>
       <td>0.86</td>
@@ -1167,44 +1174,58 @@ leaving_ind
       <td>1</td>
     </tr>
     <tr>
-      <th>4252</th>
-      <td>0.14</td>
-      <td>0.66</td>
+      <th>5565</th>
+      <td>0.84</td>
+      <td>0.84</td>
       <td>6</td>
-      <td>142</td>
+      <td>261</td>
       <td>5</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>support</td>
+      <td>product_mng</td>
       <td>low</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>4683</th>
-      <td>0.12</td>
-      <td>0.70</td>
-      <td>4</td>
-      <td>276</td>
+      <th>5586</th>
+      <td>0.81</td>
+      <td>0.99</td>
+      <td>2</td>
+      <td>156</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>medium</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5662</th>
+      <td>0.44</td>
+      <td>0.87</td>
+      <td>2</td>
+      <td>140</td>
       <td>4</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>sales</td>
-      <td>low</td>
+      <td>high</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>5773</th>
-      <td>0.45</td>
-      <td>0.62</td>
-      <td>6</td>
-      <td>129</td>
+      <th>5762</th>
+      <td>0.79</td>
+      <td>0.90</td>
+      <td>5</td>
+      <td>212</td>
       <td>5</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>support</td>
+      <td>technical</td>
       <td>low</td>
       <td>1</td>
     </tr>
@@ -1223,48 +1244,6 @@ leaving_ind
       <td>1</td>
     </tr>
     <tr>
-      <th>6076</th>
-      <td>0.35</td>
-      <td>0.54</td>
-      <td>2</td>
-      <td>124</td>
-      <td>3</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>support</td>
-      <td>low</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>6228</th>
-      <td>0.76</td>
-      <td>0.80</td>
-      <td>4</td>
-      <td>226</td>
-      <td>5</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>support</td>
-      <td>low</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>6263</th>
-      <td>0.90</td>
-      <td>0.87</td>
-      <td>4</td>
-      <td>231</td>
-      <td>5</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>management</td>
-      <td>low</td>
-      <td>1</td>
-    </tr>
-    <tr>
       <th>6358</th>
       <td>0.81</td>
       <td>0.98</td>
@@ -1279,45 +1258,45 @@ leaving_ind
       <td>1</td>
     </tr>
     <tr>
-      <th>6448</th>
-      <td>0.32</td>
-      <td>0.50</td>
-      <td>2</td>
-      <td>143</td>
-      <td>3</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>technical</td>
-      <td>high</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>6726</th>
-      <td>0.87</td>
-      <td>0.95</td>
-      <td>3</td>
-      <td>242</td>
-      <td>5</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>sales</td>
-      <td>low</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>7077</th>
-      <td>0.90</td>
+      <th>7004</th>
       <td>0.85</td>
-      <td>4</td>
-      <td>279</td>
+      <td>0.87</td>
+      <td>6</td>
+      <td>232</td>
       <td>6</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>support</td>
+      <td>technical</td>
+      <td>low</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7443</th>
+      <td>0.85</td>
+      <td>0.96</td>
+      <td>4</td>
+      <td>240</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>technical</td>
       <td>medium</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7732</th>
+      <td>0.39</td>
+      <td>0.68</td>
+      <td>2</td>
+      <td>137</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>low</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1349,31 +1328,17 @@ leaving_ind
       <td>1</td>
     </tr>
     <tr>
-      <th>8128</th>
-      <td>0.96</td>
-      <td>0.91</td>
-      <td>3</td>
-      <td>260</td>
-      <td>5</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>technical</td>
-      <td>low</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>8191</th>
-      <td>0.61</td>
-      <td>0.38</td>
+      <th>7989</th>
+      <td>0.36</td>
+      <td>0.45</td>
       <td>2</td>
-      <td>268</td>
+      <td>135</td>
       <td>3</td>
+      <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
-      <td>sales</td>
-      <td>low</td>
+      <td>support</td>
+      <td>high</td>
       <td>1</td>
     </tr>
     <tr>
@@ -1391,30 +1356,44 @@ leaving_ind
       <td>1</td>
     </tr>
     <tr>
-      <th>9582</th>
-      <td>0.43</td>
-      <td>0.51</td>
+      <th>8992</th>
+      <td>0.41</td>
+      <td>0.69</td>
       <td>2</td>
-      <td>123</td>
-      <td>3</td>
+      <td>152</td>
+      <td>4</td>
+      <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
-      <td>technical</td>
-      <td>medium</td>
+      <td>IT</td>
+      <td>low</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>9781</th>
-      <td>0.42</td>
-      <td>0.50</td>
+      <th>9263</th>
+      <td>0.41</td>
+      <td>0.70</td>
       <td>2</td>
       <td>151</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>accounting</td>
+      <td>low</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9913</th>
+      <td>0.42</td>
+      <td>0.58</td>
+      <td>2</td>
+      <td>140</td>
       <td>3</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>sales</td>
+      <td>IT</td>
       <td>low</td>
       <td>1</td>
     </tr>
@@ -1433,31 +1412,59 @@ leaving_ind
       <td>1</td>
     </tr>
     <tr>
-      <th>10671</th>
-      <td>0.37</td>
-      <td>0.51</td>
-      <td>2</td>
-      <td>153</td>
-      <td>3</td>
+      <th>11743</th>
+      <td>0.79</td>
+      <td>0.86</td>
+      <td>5</td>
+      <td>238</td>
+      <td>8</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>IT</td>
-      <td>high</td>
+      <td>sales</td>
+      <td>low</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>12882</th>
-      <td>0.37</td>
-      <td>0.51</td>
-      <td>2</td>
-      <td>153</td>
-      <td>3</td>
+      <th>11980</th>
+      <td>0.79</td>
+      <td>0.87</td>
+      <td>4</td>
+      <td>223</td>
+      <td>5</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>IT</td>
-      <td>high</td>
+      <td>sales</td>
+      <td>medium</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>13954</th>
+      <td>0.79</td>
+      <td>0.86</td>
+      <td>5</td>
+      <td>238</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>low</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>14191</th>
+      <td>0.79</td>
+      <td>0.87</td>
+      <td>4</td>
+      <td>223</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>medium</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -1470,16 +1477,14 @@ And there we have it! A list of employees that are likely to leave the company, 
 
 
 ```python
-from matplotlib.pyplot import pie, axis, show
-
-sums = leaving_ind.leave_prob.groupby(leaving_ind.sales).sum()
+sums = leaving_ind.may_leave.groupby(leaving_ind.department).sum()
 axis('equal');
 pie(sums, labels=sums.index);
 show()
 ```
 
 
-![png](output_50_0.png)
+![png](output_48_0.png)
 
 
 
